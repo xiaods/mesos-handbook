@@ -22,15 +22,17 @@ Mesos社区拥有很多中国开发者，大家也非常热情和耐心帮助Mes
 
 ## 如何使用本书
 
-**本地查看** 
+**本地查看**
 
-1. 将代码克隆到本地 
-2. 安装 gitbook：[Setup and Installation of GitBook](https://github.com/GitbookIO/gitbook/blob/master/docs/setup.md) 
-3. 执行 gitbook serve 
-4. 在浏览器中访问http://localhost:4000 
+1. 将代码克隆到本地
+2. 安装 gitbook：[Setup and Installation of GitBook](https://github.com/GitbookIO/gitbook/blob/master/docs/setup.md)
+3. 执行 gitbook serve
+4. 在浏览器中访问http://localhost:4000
 5. 生成的文档在 `_book` 目录下
 
-**注意**：<u>文中涉及的配置文件和代码链接在 gitbook 中会无法打开，请下载 github 源码后，在 MarkDown 编辑器中打开，点击链接将跳转到你的本地目录，推荐使用[typora](www.typorai.o)</u>。
+**注意**：<u>文中涉及的配置文件和代码链接在 gitbook 中会无法打开，请下载 github
+源码后，在 MarkDown
+编辑器中打开，点击链接将跳转到你的本地目录，推荐使用[typora](https://www.typora.io)</u>。
 
 
 
@@ -39,16 +41,16 @@ Mesos社区拥有很多中国开发者，大家也非常热情和耐心帮助Mes
 ### 文档的组织规则
 
 - 如果要创建一个大的主题就在最顶层创建一个目录；
-- 如果要创建一个大的主题就在最顶层创建一个目录； 
+- 如果要创建一个大的主题就在最顶层创建一个目录；
 - 全书五大主题，每个主题一个目录，其下不再设二级目录；
-- 所有的图片都放在最顶层的 `images` 目录下，原则上文章中用到的图片都保存在本地； 
+- 所有的图片都放在最顶层的 `images` 目录下，原则上文章中用到的图片都保存在本地；
 - 所有的文档的文件名使用英文命名，可以包含数字和中划线； - `etc`、`manifests`目录专门用来保存配置文件和文档中用到的其他相关文件；
 
 ### 添加文档
 
-1. 在该文章相关主题的目录下创建文档； 
-2. 在 `SUMMARY.md` 中在相应的章节下添加文章链接； 
-3. 执行 `gitbook server` 测试是否报错，访问 http://localhost:4000 查看该文档是否出现在相应主题的目录下； 
+1. 在该文章相关主题的目录下创建文档；
+2. 在 `SUMMARY.md` 中在相应的章节下添加文章链接；
+3. 执行 `gitbook server` 测试是否报错，访问 http://localhost:4000 查看该文档是否出现在相应主题的目录下；
 4. 提交PR
 
 
