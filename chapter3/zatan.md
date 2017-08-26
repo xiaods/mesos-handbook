@@ -1,0 +1,20 @@
+# 关于容器云平台的其他一些杂谈
+
+前面我们搭建的这个平台，大部分操作都是通过使用框架提供的网页来操作，实际生产环境中，肯定需要我们自己来实现一套自动化的系统来帮助我们完成这些事情。我们可以根据前面章节提供的这些开源组件以及他们的功能来开发自己的容器云平台。
+
+
+#对于数据持久化
+前面章节我们搭建的mesos集群和Marathon集群都没提及数据持久化问题。其实docker对于数据持久化做的很方便，只需要使用volume将需要存储的路径挂载到宿主机的磁盘上即可。我们可以根据需要，将mesos的日志文件或者zookeeper的存储文件挂载到自己指定的地方即可。其实我们在运行的时候，这些container在dockerfile中声明了vloume，docker会在自己的/var/lib/docker/volume文件夹中存储容器中挂载出来的目录。
+
+这是对于基础平台的数据持久化。但是如果是运行在我们平台上的容器，如果他被scale到别的机器或者被重启后迁移，他挂载在宿主机的磁盘数据如何跟随他自己迁移呢。这里推荐使用flocker。flocker可以将docker的volume在不同主机之间迁移，保证用户的数据不被丢失。这里有一个官方demo的架构图。
+
+![](https://clusterhq.com/assets/images/blog/2015-09-23/marathon-ha-demo-architecture.png)
+
+当左侧的node1失效的时候，salve宕机，flocker可以自动将存储在EBS volume上的数据同步到node2上，这样就可以实现docker volume的迁移，对于数据库等应用非常的适合。具体的搭建步骤参考[flocker-marathon](https://clusterhq.com/2015/10/06/marathon-ha-demo/)。
+
+#流程的优化
+如何将我们前面搭建的架构使用代码串联起来，也是实际搭建容器云平台的一个问题。首先对于这些image的获取，docker pull 官方的image会比较慢，可以通过加速器来加快流程。可以使用[灵雀云](http://www.alauda.cn/)提供的镜像加速服务来快速pull镜像，如果有能力也可以自己搭建一个registry，自己管理images。
+
+Marathon的client可以根据自己的语言喜好，有各种版本的client。整个平台创建一个容器的流程大概如下。根据用户选择的image和填写的参数以及环境变量等，使用client向Marathon发送请求，然后Marathon接受请求后开始部署。部署完毕后，bamboo就发现了这个服务的IP和port等信息，然后调用bamboo的rest api，给这个服务添加acl规则，这个时候bamboo就会根据你的规则生成对应的haproxy配置文件，然后haproxy会进行reload来使新的服务生效，这个时候就可以根据IP或者域名访问到部署上去的服务。
+
+如果用户需要扩容，client可以直接向Marathon发送扩容的请求，Marathon就会完成扩容的动作，并且bamboo会自动发现实例数量的变化，reload haproxy，用户这边没有任何感知就可以继续使用原来的域名访问他们的服务，但是这时候后台已经有多个服务在通过haproxy的负载均衡策略提供服务。这样一个基本的容器云服务平台就搭建完成，也可以基本的使用，我们可以很方便的通过增加mesos slave来向集群添加机器，mesos和Marathon会帮我们做好机器之间的选择与部署。

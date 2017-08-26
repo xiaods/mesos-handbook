@@ -1,0 +1,9 @@
+# 容器云平台基础概述
+
+经过前面的搭建，我们已经拥有了一个mesos集群和一个Marathon framework。而对于企业级容器云平台来说，拥有这些还是不足的。
+
+设想一下企业级容器云实际使用情况。我们需要一个高可用的环境。因此需要zookeeper多节点，mesos master 多节点以做备份。然后Marathon 也有ha模式，可以有效的防止master失效导致环境不可用。
+
+实际使用中，我们应该会使用Marathon的rest api来发起部署请求，将我们需要部署的镜像和相关的环境变量交给Marathon，这样的功能一定是集成到我们自己的一个平台里面的。在Marathon部署的时候，我们的容器可能会被分配到一个随机的节点，因此我们需要一种服务发现机制。一般来说，mesos 和Marathon都是部署在内网环境中，一般不允许外部直接访问。我们应该有一个节点专门负责对外访问的负载均衡的功能。Marathon本身内置了服务发现的功能。我们可以通过开启他来让Marathon帮助你自动生成haproxy的配置文件，然后reload来实现服务发现。但是这样可定制性不是很强，而且因为和Marathon绑定，我们不太容易迁移和扩展。因此我们这里使用bamboo这个开源项目来做服务发现。bamboo是一个使go开发的能够自动生成haproxy的配置文件然后reload的项目。他的信息来源是通过注册了Marathon的事件订阅机制，Marathon再有变化的时候会自动通知它，然后bamboo就会完成一系列的生成配置文件然后reload haproxy的功能。关于bamboo的详细介绍可以看[这里](https://github.com/QubitProducts/bamboo)。
+
+由于bamboo也提供了rest api，因此我们可以很方便的使用代码去完成服务发现，到最终部署的服务可以被外网访问到这一个完整的流程，下面我们就开始搭建。
