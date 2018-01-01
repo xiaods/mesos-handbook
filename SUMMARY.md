@@ -1,10 +1,10 @@
 # Summary
 
 - [1. 前言](README.md)
-- [2. 概念原理](concepts/index.md)
+- [2. Mesos理论篇](concepts/index.md)
   - [2.1 设计理念](concepts/concepts.md)
   - [2.2 主要概念](concepts/objects.md)
-- [Mesos实战篇](mesosshi-zhan-pian.md)
+- [3.Mesos实战篇](mesosshi-zhan-pian.md)
   - [Mesos搭建日志处理系统实战](chapter2.md)
   - [Mesos搭建企业级容器云实战](chapter3.md)
     - [Mesos搭建企业级容器云项目概述](chapter3/README.md)
